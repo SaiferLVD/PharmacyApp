@@ -1,0 +1,298 @@
+﻿<Window x:Class="PharmacyApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Аптека — Управление базой данных" Height="680" Width="1080"
+        WindowStartupLocation="CenterScreen"
+        Background="#12141D" Foreground="#F1F5F9"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background" Value="#1B1F2E"/>
+            <Setter Property="BorderBrush" Value="#2D344B"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="18"/>
+        </Style>
+
+        <Style x:Key="GlowHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F8FAFC"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#7DD3FC" BlurRadius="10" ShadowDepth="0" Opacity="0.45"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#252A3D"/>
+            <Setter Property="Foreground" Value="#F8FAFC"/>
+            <Setter Property="CaretBrush" Value="#38BDF8"/>
+            <Setter Property="BorderBrush" Value="#3B425C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="2"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#38BDF8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#252A3D"/>
+            <Setter Property="Foreground" Value="#12141D"/>
+            <Setter Property="BorderBrush" Value="#3B425C"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#0284C7"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="btnBorder" Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="btnBorder" Property="Background" Value="#0EA5E9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="btnBorder" Property="Background" Value="#0369A1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button">
+            <Setter Property="Background" Value="#DC2626"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="btnBorder" Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="btnBorder" Property="Background" Value="#EF4444"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="btnBorder" Property="Background" Value="#B91C1C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#1B1F2E"/>
+            <Setter Property="Foreground" Value="#F1F5F9"/>
+            <Setter Property="RowBackground" Value="#1B1F2E"/>
+            <Setter Property="AlternatingRowBackground" Value="#212638"/>
+            <Setter Property="BorderBrush" Value="#2D344B"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#2D344B"/>
+            <Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="RowHeight" Value="36"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#252B40"/>
+            <Setter Property="Foreground" Value="#E0F2FE"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderBrush" Value="#2D344B"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#1E3A5F"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="330"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Margin="0,0,18,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="260"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="Просмотр таблиц базы данных" 
+                                   Style="{StaticResource GlowHeader}"
+                                   FontSize="18"/>
+                        <TextBlock Text="Выберите нужный раздел аптеки из списка справа" 
+                                   Foreground="#94A3B8" 
+                                   FontSize="13" 
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+
+                    <ComboBox x:Name="TableSelectorCombo" 
+                              Grid.Column="1" 
+                              SelectedIndex="0"
+                              VerticalAlignment="Center"
+                              FontWeight="SemiBold"
+                              SelectionChanged="TableSelectorCombo_SelectionChanged">
+                        <ComboBoxItem Content="Лекарства (Medicines)"/>
+                        <ComboBoxItem Content="Продавцы (Sellers)"/>
+                        <ComboBoxItem Content="Продажи (Sales)"/>
+                        <ComboBoxItem Content="Категории (Categories)"/>
+                        <ComboBoxItem Content="Поставщики (Suppliers)"/>
+                    </ComboBox>
+                </Grid>
+            </Border>
+
+            <DataGrid x:Name="MainDataGrid" 
+                      Grid.Row="1" 
+                      AutoGenerateColumns="True" 
+                      AutoGeneratingColumn="MainDataGrid_AutoGeneratingColumn"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      GridLinesVisibility="Horizontal"/>
+        </Grid>
+
+        <Border Grid.Column="1" Style="{StaticResource CardBorder}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Добавить препарат" 
+                               Style="{StaticResource GlowHeader}"
+                               FontSize="18" 
+                               Margin="0,0,0,6"/>
+                    <TextBlock Text="Новый товар сохранится в SQL Server" 
+                               Foreground="#94A3B8" 
+                               FontSize="12" 
+                               Margin="0,0,0,8"/>
+
+                    <TextBlock Text="Название препарата:" Style="{StaticResource FieldLabel}"/>
+                    <TextBox x:Name="NameBox"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Цена (руб.):" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="PriceBox"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Остаток (шт.):" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="StockBox"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="Категория:" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox x:Name="CategoryCombo" 
+                              DisplayMemberPath="CategoryName" 
+                              SelectedValuePath="CategoryID"/>
+
+                    <TextBlock Text="Поставщик:" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox x:Name="SupplierCombo" 
+                              DisplayMemberPath="CompanyName" 
+                              SelectedValuePath="SupplierID"/>
+
+                    <CheckBox x:Name="PrescriptionCheck" 
+                              Content="Отпускается строго по рецепту" 
+                              Foreground="#E2E8F0" 
+                              FontSize="13" 
+                              Margin="0,16,0,16"/>
+
+                    <Button Content="+ Добавить в базу" 
+                            Style="{StaticResource PrimaryButton}" 
+                            Click="AddMedicineButton_Click"/>
+
+                    <Border Height="1" Background="#2D344B" Margin="0,20,0,16"/>
+
+                    <TextBlock Text="Удалить препарат" 
+                               Style="{StaticResource GlowHeader}"
+                               FontSize="16" 
+                               Margin="0,0,0,4"/>
+                    <TextBlock Text="Выделите строку в таблице «Лекарства» и нажмите кнопку ниже" 
+                               Foreground="#94A3B8" 
+                               FontSize="12" 
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12"/>
+
+                    <Button Content="Удалить выбранный товар" 
+                            Style="{StaticResource DangerButton}" 
+                            Click="DeleteMedicineButton_Click"/>
+
+                    <TextBlock x:Name="StatusText" 
+                               Text="" 
+                               FontSize="13" 
+                               TextWrapping="Wrap" 
+                               Margin="0,14,0,0" 
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>
